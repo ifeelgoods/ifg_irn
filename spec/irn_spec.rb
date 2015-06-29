@@ -54,6 +54,14 @@ describe Irn do
         Irn.new('irn:acme')
       )
     end
+
+    example 'two equal irn have the same hash' do
+      expect(
+        Irn.new('irn:ifeelgoods').hash
+      ).to eq(
+        Irn.new('irn:ifeelgoods').hash
+      )
+    end
   end
 
   describe '#match?' do

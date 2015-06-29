@@ -47,6 +47,12 @@ class Irn
     self.eql?(other)
   end
 
+  # Calculate the object hash from its representation
+  #
+  def hash
+    @irn.hash
+  end
+
   # Return true if the irn match another
   #
   # @param other [Irn] the irn to check
