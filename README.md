@@ -1,8 +1,6 @@
 # IfgIrn
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/ifg_irn`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
+`IRN` are simple string format that identify a resource or a set of resource. It was heavily inspired by Amazon ARN identifier.
 
 ## Installation
 
@@ -22,7 +20,57 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+An IRN can either uniquely identifiy a resource
+
+```ruby
+a_reward = Irn.new('irn:ifeelgoods:rewards:1234')
+```
+
+Or a set of resources. Such are called wildcard irn
+
+```ruby
+rewards = Irn.new('irn:ifeelgoods:rewards:*')
+```
+
+An IRN is similar to a path. An irn match another if they are the same
+
+```ruby
+a_reward.match(Irn.new('irn:ifeelgoods:rewards:1234'))
+true
+```
+
+Or the latter is contained in the first one
+
+```ruby
+rewards.match?(a_reward)
+true
+  ```
+
+All descendents irn are matched. the `strict` options allow to restrict the matching to immediate children
+
+```ruby
+rewards.match?(Irn.new('irn:ifeelgoods:rewards:1234:variants:3'))
+true
+
+rewards.match?(Irn.new('irn:ifeelgoods:rewards:1234:variants:3', strict: true))
+false
+```
+
+The matching part of the irn can be extracted using the match method
+
+```ruby
+match_result = rewards.match(a_reward)
+match_result.data
+'1234'
+```
+
+The bind method create a new matching irn
+
+```ruby
+irn = rewards.bind('9999')
+puts irn
+irn:ifeelgoods:rewards:9999
+```
 
 ## Development
 
@@ -32,7 +80,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/ifg_irn. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](contributor-covenant.org) code of conduct.
+Bug reports and pull requests are welcome on GitHub at https://github.com/ifeelgoods/ifg_irn.
 
 
 ## License
