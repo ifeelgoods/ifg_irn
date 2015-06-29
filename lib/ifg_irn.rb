@@ -1,5 +1,4 @@
 require "ifg_irn/version"
-
-module IfgIrn
-  # Your code goes here...
-end
+require "ifg_irn/exceptions"
+require "ifg_irn/match_result"
+require "ifg_irn/irn"
