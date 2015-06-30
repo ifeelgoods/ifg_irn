@@ -90,7 +90,7 @@ class Irn
       if strict
         @_regexp_strict ||= build_regexp('(?<wildcard>\w+)')
       else
-        @_regexp ||= build_regexp('(?<wildcard>(\w|:)+)')
+        @_regexp ||= build_regexp('(?<wildcard>(\w|:|\*)+)')
       end
     end
 

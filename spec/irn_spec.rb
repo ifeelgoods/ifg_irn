@@ -76,6 +76,13 @@ describe Irn do
       ).to be(true)
     end
 
+    example 'two equal wilcard irn are matching' do
+      expect(
+        Irn.new('irn:ifeelgoods:*')
+        .match?(Irn.new('irn:ifeelgoods:*'))
+      ).to be(true)
+    end
+
     example 'two distinct irn are not matching' do
       expect(
         Irn.new('irn:ifeelgoods')
@@ -95,6 +102,20 @@ describe Irn do
         Irn.new('irn:ifeelgoods:*')
         .match?(Irn.new('irn:ifeelgoods:client:1234'))
       ).to be(true)
+    end
+
+    example 'a wildcard irn matching a wildcard irn' do
+      expect(
+        Irn.new('irn:ifeelgoods:*')
+        .match?(Irn.new('irn:ifeelgoods:client:*'))
+      ).to be(true)
+    end
+
+    example 'a wildcard irn non matching a wildcard irn' do
+      expect(
+        Irn.new('irn:ifeelgoods:client:*')
+        .match?(Irn.new('irn:ifeelgoods:*'))
+      ).to be(false)
     end
 
     example 'a wildcard irn strictly non matching an irn' do
