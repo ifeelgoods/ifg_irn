@@ -36,6 +36,10 @@ describe Irn do
       expect{Irn.new('irn:*:ifeelgoods')}.to raise_error(IfgIrn::IrnMalformedError)
       expect{Irn.new('irn:*')}.to raise_error(IfgIrn::IrnMalformedError)
     end
+
+    example 'bad argument' do
+      expect{Irn.new(1234)}.to raise_error(ArgumentError, 'bad argument (expected an IRN string)')
+    end
   end
 
   describe 'equality' do

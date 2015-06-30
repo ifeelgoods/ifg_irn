@@ -8,6 +8,7 @@ class Irn
   # @param Irn[String] irn to create
   #
   def initialize(irn)
+    raise ArgumentError, 'bad argument (expected an IRN string)' unless irn.respond_to?(:to_str)
     raise IfgIrn::IrnMalformedError unless REGEXP =~ irn
     @irn = irn
     @parts = irn.split(':')
