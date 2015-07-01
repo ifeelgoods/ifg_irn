@@ -11,46 +11,22 @@ module IfgIrn
     end
 
     def parse!(irn)
-      match_data = regexp_schema.match(irn)
-      raise IfgIrn::IrnInvalidError unless match_data
-      matched_attributes(match_data)
+      attrs = {}
+      data = irn.split(':')
+      irn_schema.tokens.each_with_index do |token, i|
+        if token == Irn::WILDCARD
+          attrs[:data] = data[i..-1]
+          raise IfgIrn::IrnInvalidError if Array(attrs[:data]).empty?
+        else
+          attrs[token.to_sym] = data[i]
+          raise IfgIrn::IrnInvalidError unless data[i]
+        end
+      end
+      attrs
     end
 
     def inspect
     "<Schema  #{irn_schema}>"
     end
-
-    private
-
-      def regexp_schema
-        @regexp_schema ||= build_regexp_schema
-      end
-
-      def build_regexp_schema
-        re = "\\A"
-        @irn_schema.tokens.each_with_index do |token, index|
-          if index == 0
-            re << "(?<#{token}>(\\w|-)+)"
-          elsif token == Irn::WILDCARD
-            re << "(?<data>(:(\\w|-)+)+(:\\*)?)"
-          else
-            re << ":(?<#{token}>(\\w|-)+)+"
-          end
-        end
-        re << "\\z"
-        Regexp.new(re)
-      end
-
-      def matched_attributes(match_data)
-        attrs = { }
-        match_data.names.each do |name|
-          if name == 'data'
-            attrs[name.to_sym] = match_data[name][1..-1]
-          else
-            attrs[name.to_sym] = match_data[name]
-          end
-        end
-        attrs
-      end
   end
 end

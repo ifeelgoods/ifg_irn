@@ -10,14 +10,14 @@ module IfgIrn
           irn: 'irn',
           org: 'acme',
           country: 'france',
-          data: 'client:123'
+          data: ['client', '123']
         })
 
         expect(schema.parse!('irn:acme:france:client')).to eq({
           irn: 'irn',
           org: 'acme',
           country: 'france',
-          data: 'client'
+          data: ['client']
         })
       end
 
