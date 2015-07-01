@@ -1,10 +1,7 @@
 module IfgIrn
-  class IfgIrn::IrnMalformedError < StandardError
-  end
+  class IrnError < StandardError; end
 
-  class IfgIrn::IrnCannotBind < StandardError
-  end
-
-  class IfgIrn::IrnInvalidError < StandardError
-  end
+  class IrnMalformedError < IrnError; end
+  class IrnCannotBind < IrnError; end
+  class IrnInvalidError < IrnError; end
 end

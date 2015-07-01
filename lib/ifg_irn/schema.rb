@@ -10,6 +10,12 @@ module IfgIrn
       Irn.new(irn, schema: self)
     end
 
+    def validate(irn)
+      !! build(irn)
+    rescue IfgIrn::IrnError
+      false
+    end
+
     def parse!(irn)
       attrs = {}
       data = irn.split(':')
@@ -26,7 +32,7 @@ module IfgIrn
     end
 
     def inspect
-    "<Schema  #{irn_schema}>"
+      "<Schema  #{irn_schema}>"
     end
   end
 end

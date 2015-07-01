@@ -40,5 +40,15 @@ module IfgIrn
         expect{schema.build('irn:acme:france:client::123')}.to raise_error(IfgIrn::IrnMalformedError)
       end
     end
+
+    describe '#validate' do
+      it 'is true when the irn is valid' do
+        expect(schema.validate('irn:acme:france:client:123')).to be(true)
+      end
+
+      it 'is false when the irn is invalid' do
+        expect(schema.validate('irn:acme:france:client::123')).to be(false)
+      end
+    end
   end
 end
