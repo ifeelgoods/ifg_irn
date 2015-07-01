@@ -4,14 +4,25 @@ module IfgIrn
   describe Schema do
     let(:schema) { Schema.new('irn:org:country:*') }
 
-    describe '#validate!' do
+    describe '#parse!' do
       it 'succeed for valid irn' do
-        expect(schema.validate!('irn:acme:france:client:123')).to be(true)
-        expect(schema.validate!('irn:acme:france:client')).to be(true)
+        expect(schema.parse!('irn:acme:france:client:123')).to eq({
+          irn: 'irn',
+          org: 'acme',
+          country: 'france',
+          data: 'client:123'
+        })
+
+        expect(schema.parse!('irn:acme:france:client')).to eq({
+          irn: 'irn',
+          org: 'acme',
+          country: 'france',
+          data: 'client'
+        })
       end
 
       it 'fail with invalid irn' do
-        expect{schema.validate!('irn:acme:france')}.to raise_error(IfgIrn::IrnInvalidError)
+        expect{schema.parse!('irn:acme:france')}.to raise_error(IfgIrn::IrnInvalidError)
       end
     end
 
