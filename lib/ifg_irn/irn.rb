@@ -2,27 +2,32 @@ class Irn
   REGEXP = /\A(\w|-)+(:(\w|-)+)+(:\*)?\z/.freeze
   WILDCARD = '*'.freeze
 
+  attr_reader :attributes
 
   # Create a new Irn.
   #
   # @param Irn[String] irn to create
   #
-  def initialize(irn)
+  def initialize(irn, schema: nil)
     raise ArgumentError, 'bad argument (expected an IRN string)' unless irn.respond_to?(:to_str)
     raise IfgIrn::IrnMalformedError unless REGEXP =~ irn
+    @attributes = schema.validate!(irn) if schema
     @irn = irn
-    @parts = irn.split(':')
+  end
+
+  def tokens
+    @irn.split(':')
   end
 
   # Return the irn scheme
   #
   def scheme
-    @parts.first
+    tokens.first
   end
 
   # Return true if the irn has a wildcard at the end.
   def wildcard?
-    @parts.last == WILDCARD
+    tokens.last == WILDCARD
   end
 
   # Return the string representation of the irn.

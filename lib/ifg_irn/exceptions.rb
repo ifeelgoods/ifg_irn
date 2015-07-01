@@ -4,4 +4,7 @@ module IfgIrn
 
   class IfgIrn::IrnCannotBind < StandardError
   end
+
+  class IfgIrn::IrnInvalidError < StandardError
+  end
 end
