@@ -16,11 +16,15 @@ module IfgIrn
       matched_attributes(match_data)
     end
 
-    def regexp_schema
-      @regexp_schema ||= build_regexp_schema
+    def inspect
+    "<Schema  #{irn_schema}>"
     end
 
     private
+
+      def regexp_schema
+        @regexp_schema ||= build_regexp_schema
+      end
 
       def build_regexp_schema
         re = "\\A"
