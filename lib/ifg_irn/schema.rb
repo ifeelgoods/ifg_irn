@@ -1,9 +1,15 @@
 module IfgIrn
   class Schema
-    attr_reader :irn_schema
+    REGEXP = /\A\??(\w|-)+(:\??(\w|-)+)+(:\*)?\z/.freeze
 
     def initialize(irn)
-      @irn_schema = Irn.new(irn)
+      raise ArgumentError, 'bad argument (expected an IRN string)' unless irn.respond_to?(:to_str)
+      raise IfgIrn::IrnMalformedError unless REGEXP =~ irn
+      @irn_schema = irn
+    end
+
+    def tokens
+      @irn_schema.split(':')
     end
 
     def build(irn)
@@ -19,20 +25,25 @@ module IfgIrn
     def parse!(irn)
       attrs = {}
       data = irn.split(':')
-      irn_schema.tokens.each_with_index do |token, i|
+      tokens.each_with_index do |token, i|
         if token == Irn::WILDCARD
           attrs[:data] = data[i..-1]
           raise IfgIrn::IrnInvalidError if Array(attrs[:data]).empty?
-        else
-          attrs[token.to_sym] = data[i]
+        elsif token[0] == '?'
+          name = token[1..-1].to_sym
+          attrs[name] = data[i]
           raise IfgIrn::IrnInvalidError unless data[i]
+        else
+          name = token.to_sym
+          attrs[name] = data[i]
+          raise IfgIrn::IrnInvalidError unless data[i] == token
         end
       end
       attrs
     end
 
     def inspect
-      "<Schema  #{irn_schema}>"
+      "<Schema  #{@irn_schema}>"
     end
   end
 end

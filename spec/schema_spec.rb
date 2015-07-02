@@ -2,7 +2,7 @@ require 'spec_helper'
 
 module IfgIrn
   describe Schema do
-    let(:schema) { Schema.new('irn:org:country:*') }
+    let(:schema) { Schema.new('irn:?org:?country:*') }
 
     describe '#parse!' do
       it 'succeed for valid irn' do
@@ -23,6 +23,7 @@ module IfgIrn
 
       it 'fail with invalid irn' do
         expect{schema.parse!('irn:acme:france')}.to raise_error(IfgIrn::IrnInvalidError)
+        expect{schema.parse!('urn:acme:france:client:123')}.to raise_error(IfgIrn::IrnInvalidError)
       end
     end
 
