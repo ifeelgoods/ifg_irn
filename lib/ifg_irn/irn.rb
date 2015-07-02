@@ -35,6 +35,12 @@ class Irn
     @irn
   end
 
+  # Define an implicit string conversion
+  #
+  def to_str
+    @irn
+  end
+
   # Return a human redeable representation of the irn
   # Just like to_s but inside <> to not confuse with a real string
   def inspect
