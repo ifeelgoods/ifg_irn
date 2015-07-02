@@ -12,7 +12,7 @@ class Irn
     raise ArgumentError, 'bad argument (expected an IRN string)' unless irn.respond_to?(:to_str)
     raise IfgIrn::IrnMalformedError unless REGEXP =~ irn
     @attributes = schema.parse!(irn) if schema
-    @irn = irn
+    @irn = irn.to_str
   end
 
   def tokens
