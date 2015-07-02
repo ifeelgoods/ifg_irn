@@ -32,6 +32,10 @@ class IrnList
     IrnList.new(restriction)
   end
 
+  def restrict_with(irn_list)
+    irn_list.restrict(self)
+  end
+
   def each
     @irns.each { |x| yield(x) }
   end
