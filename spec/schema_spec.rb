@@ -58,7 +58,7 @@ module IfgIrn
       end
     end
 
-    describe '#build' do
+    describe '#build with a string' do
       it 'build valid irn object' do
         expect(schema.build('irn:acme:france:client:123')).to eq(Irn.new('irn:acme:france:client:123'))
         expect(schema.build('irn:acme:france:client')).to eq(Irn.new('irn:acme:france:client'))
@@ -71,6 +71,36 @@ module IfgIrn
 
       it 'fail with malformed irn' do
         expect{schema.build('irn:acme:france:client::123')}.to raise_error(IfgIrn::IrnMalformedError)
+      end
+    end
+
+    describe '#build with a hash' do
+      it 'build valid irn object' do
+        expect(
+          schema.build(irn: 'irn', org: 'acme', country: 'france', data: ['client', '123'])
+        ).to eq(Irn.new('irn:acme:france:client:123'))
+
+        expect(
+          schema.build(org: 'acme', country: 'france', data: 'client:123')
+        ).to eq(Irn.new('irn:acme:france:client:123'))
+
+        expect(
+          schema.build(org: 'acme', country: 'france')
+        ).to eq(Irn.new('irn:acme:france'))
+
+        expect(
+          schema.build(org: 'acme', country: '*')
+        ).to eq(Irn.new('irn:acme:*'))
+      end
+
+      it 'fail with invalid irn' do
+        expect {
+          schema.build(irn: 'foo', org: 'acme', country: 'france', data: 'client:123')
+        }.to raise_error(IfgIrn::IrnInvalidError)
+
+        expect {
+          schema.build(org: 'acme:test', country: 'france', data: 'client:123')
+        }.to raise_error(IfgIrn::IrnInvalidError)
       end
     end
 
