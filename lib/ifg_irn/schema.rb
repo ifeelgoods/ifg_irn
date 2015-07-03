@@ -28,7 +28,6 @@ module IfgIrn
       tokens.each_with_index do |token, i|
         if token == Irn::WILDCARD
           attrs[:data] = data[i..-1]
-          raise IfgIrn::IrnInvalidError if Array(attrs[:data]).empty?
         elsif token[0] == '?'
           name = token[1..-1].to_sym
           attrs[name] = data[i]
