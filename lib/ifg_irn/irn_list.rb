@@ -27,9 +27,16 @@ class IrnList
     @irns.map { |item| irn.match(item) }.select(&:matched?)
   end
 
-  def restrict(irn_list)
-    restriction = irn_list.select { |item| member?(item) }
-    IrnList.new(restriction)
+  def restrict(list)
+    restriction = IrnList.new
+    list.each do |a|
+      self.each do |b|
+        if common = a.gci(b)
+          restriction << common
+        end
+      end
+    end
+    restriction
   end
 
   def restrict_with(irn_list)

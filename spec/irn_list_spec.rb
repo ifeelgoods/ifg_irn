@@ -118,44 +118,82 @@ describe IrnList do
   end
 
   describe '#restrict' do
-    let(:list) do
-      IrnList.new([
-        'irn:acme:client:1',
-        'irn:acme:client:21',
-        'irn:acme:client:42',
-        'irn:acme:product:*',
-        'irn:acme:country:*'
-      ])
-    end
-
-    let(:list_to_restrict) do
-      IrnList.new([
-        'irn:acme:client:1',
-        'irn:acme:client:9999',
-        'irn:acme:product:9999',
-        'irn:acme:country:*'
-      ])
-    end
-
-    let(:restricted) { list.restrict(list_to_restrict) }
-
     it 'return an irn list' do
-      expect(restricted).to respond_to(:restrict)
+      list1 = IrnList.new
+      list2 = IrnList.new
+
+      expect(list1.restrict(list2)).to respond_to(:restrict)
     end
 
-    it 'return only the irn that match' do
-      expect(restricted.size).to eq(3)
+    it 'contains irn that are in both list' do
+      list1 = IrnList.new([ 'irn:acme:1'])
+      list2 = IrnList.new([ 'irn:acme:1'])
+
+      expect(list1.restrict(list2)).to include(Irn.new('irn:acme:1'))
     end
 
-    it "include irn members of both list" do
-      expect(restricted).to include(Irn.new('irn:acme:client:1'))
-      expect(restricted).to include(Irn.new('irn:acme:product:9999'))
-      expect(restricted).to include(Irn.new('irn:acme:country:*'))
+    it 'contains wildcard irn that are in both list' do
+      list1 = IrnList.new([ 'irn:acme:*'])
+      list2 = IrnList.new([ 'irn:acme:*'])
+
+      expect(list1.restrict(list2)).to include(Irn.new('irn:acme:*'))
     end
 
-    it "does not include irn not members of both list" do
-      expect(restricted).to_not include(Irn.new('irn:acme:client:9999'))
-      expect(restricted).to_not include(Irn.new('irn:acme:product:*'))
+    it 'does not contains irn that are not in both list' do
+      list1 = IrnList.new([ 'irn:acme:1'])
+      list2 = IrnList.new([ 'irn:acme:2'])
+
+      expect(list1.restrict(list2)).to be_empty
+    end
+
+    it 'is commutative' do
+      list1 = IrnList.new([ 'irn:acme:1', 'irn:acme:2'])
+      list2 = IrnList.new([ 'irn:acme:2', 'irn:acme:3'])
+
+      expect(list1.restrict(list2)).to include(Irn.new('irn:acme:2'))
+      expect(list1.restrict(list2).size).to eq(1)
+
+      expect(list2.restrict(list1)).to include(Irn.new('irn:acme:2'))
+      expect(list2.restrict(list1).size).to eq(1)
+    end
+
+    it 'match wildcard irn' do
+      list1 = IrnList.new([ 'irn:acme:1', 'irn:acme:2'])
+      list2 = IrnList.new([ 'irn:acme:*'])
+
+      expect(list1.restrict(list2)).to include(Irn.new('irn:acme:1'))
+      expect(list1.restrict(list2)).to include(Irn.new('irn:acme:2'))
+
+      expect(list2.restrict(list1)).to include(Irn.new('irn:acme:1'))
+      expect(list1.restrict(list1)).to include(Irn.new('irn:acme:2'))
+    end
+
+    it 'works with a real example' do
+      main = IrnList.new([
+        'irn:acme:client:1',
+        'irn:acme:client:2',
+        'irn:acme:product:*',
+        'irn:acme:test:1',
+        'irn:acme:test:2'
+      ])
+
+
+      child = IrnList.new([
+        'irn:acme:client:*',
+        'irn:acme:product:1',
+        'irn:acme:product:2',
+        'irn:acme:test:1',
+        'irn:acme:test:3'
+      ])
+
+      expect(main.restrict(child).size).to eq(5)
+      expect(child.restrict(main).size).to eq(5)
+
+      expect(main.restrict(child)).to include(Irn.new('irn:acme:client:1'))
+      expect(main.restrict(child)).to include(Irn.new('irn:acme:client:2'))
+      expect(main.restrict(child)).to include(Irn.new('irn:acme:product:1'))
+      expect(main.restrict(child)).to include(Irn.new('irn:acme:product:2'))
+      expect(main.restrict(child)).to include(Irn.new('irn:acme:test:1'))
     end
   end
 end

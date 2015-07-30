@@ -95,6 +95,14 @@ class Irn
     self.class.new(self.to_s.gsub(WILDCARD, data))
   end
 
+  def gci(other)
+    if match?(other)
+      other
+    elsif other.match?(self)
+      self
+    end
+  end
+
   private
 
     def to_regexp(strict)

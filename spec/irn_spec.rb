@@ -185,4 +185,38 @@ describe Irn do
       end
     end
   end
+
+  describe '#gci' do
+    it 'is the same irn for identical irn' do
+      irn1 = Irn.new('irn:acme:1')
+      irn2 = Irn.new('irn:acme:1')
+
+      expect(irn1.gci(irn2)).to eq(Irn.new('irn:acme:1'))
+    end
+
+    it 'is the same irn for identical wildcard irn' do
+      irn1 = Irn.new('irn:acme:*')
+      irn2 = Irn.new('irn:acme:*')
+
+      expect(irn1.gci(irn2)).to eq(Irn.new('irn:acme:*'))
+    end
+
+    it 'is nil for non matching irn' do
+      irn1 = Irn.new('irn:acme:1')
+      irn2 = Irn.new('irn:acme:2')
+
+      expect(irn1.gci(irn2)).to eq(nil)
+    end
+
+    it 'is the greatest common irn' do
+      irn1 = Irn.new('irn:acme:client:1')
+      irn2 = Irn.new('irn:acme:*')
+      irn3 = Irn.new('irn:acme:client:*')
+
+      expect(irn1.gci(irn2)).to eq(Irn.new('irn:acme:client:1'))
+      expect(irn2.gci(irn1)).to eq(Irn.new('irn:acme:client:1'))
+      expect(irn2.gci(irn3)).to eq(Irn.new('irn:acme:client:*'))
+      expect(irn3.gci(irn2)).to eq(Irn.new('irn:acme:client:*'))
+    end
+  end
 end
