@@ -196,4 +196,100 @@ describe IrnList do
       expect(main.restrict(child)).to include(Irn.new('irn:acme:test:1'))
     end
   end
+
+  describe '#subset?' do
+    it 'is true when all irn are member of another list' do
+      l1 = IrnList.new([
+        'irn:a:1',
+        'irn:a:2',
+        'irn:b:1'
+      ])
+      l2 = IrnList.new([
+        'irn:a:1',
+        'irn:a:2',
+        'irn:b:*'
+      ])
+
+      expect(l1.subset?(l2)).to be(true)
+    end
+
+    it 'is false when at least one irn is not a member of another list' do
+      l1 = IrnList.new([
+        'irn:a:1',
+        'irn:a:3',
+        'irn:b:1'
+      ])
+      l2 = IrnList.new([
+        'irn:a:1',
+        'irn:a:2',
+        'irn:b:*'
+      ])
+      expect(l1.subset?(l2)).to be(false)
+    end
+
+    it 'is true for an empty list' do
+      l1 = IrnList.new
+      l2 = IrnList.new(['irn:a:1'])
+
+      expect(l1.subset?(l2)).to be(true)
+    end
+  end
+
+  describe '#superset?' do
+    it 'is true when the list include all member of another list' do
+      l1 = IrnList.new([
+        'irn:a:1',
+        'irn:a:2',
+        'irn:b:1'
+      ])
+      l2 = IrnList.new([
+        'irn:a:1',
+        'irn:a:2',
+        'irn:b:*'
+      ])
+
+      expect(l2.superset?(l1)).to be(true)
+    end
+
+    it 'is false when the list does not include at least one member of another list' do
+      l1 = IrnList.new([
+        'irn:a:1',
+        'irn:a:3',
+        'irn:b:1'
+      ])
+      l2 = IrnList.new([
+        'irn:a:1',
+        'irn:a:2',
+        'irn:b:*'
+      ])
+      expect(l2.superset?(l1)).to be(false)
+    end
+
+    it 'is true for an empty list' do
+      l1 = IrnList.new
+      l2 = IrnList.new(['irn:a:1'])
+
+      expect(l2.superset?(l1)).to be(true)
+    end
+  end
+
+  describe '#union' do
+    it 'is the list of irn in at least one of the list' do
+      l1 = IrnList.new([
+        'irn:a:1',
+        'irn:a:3',
+        'irn:b:1'
+      ])
+      l2 = IrnList.new([
+        'irn:a:1',
+        'irn:a:2',
+        'irn:b:*'
+      ])
+
+      expect(l1.union(l2)).to include(Irn.new('irn:a:1'))
+      expect(l1.union(l2)).to include(Irn.new('irn:a:3'))
+      expect(l1.union(l2)).to include(Irn.new('irn:b:1'))
+      expect(l1.union(l2)).to include(Irn.new('irn:b:*'))
+    end
+  end
 end
