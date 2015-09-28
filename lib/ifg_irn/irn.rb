@@ -1,5 +1,5 @@
 class Irn
-  REGEXP = /\A(\w|-)+(:(\w|-)+)+(:\*)?\z/.freeze
+  REGEXP = /\A(\w|-)+(:(\w|-|\+)+)+(:\*)?\z/.freeze
   WILDCARD = '*'.freeze
 
   attr_reader :attributes
