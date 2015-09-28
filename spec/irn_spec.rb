@@ -23,6 +23,7 @@ describe Irn do
       expect{Irn.new('irn:ifeelgoods:123')}.to_not raise_error
       expect{Irn.new('irn:ifeelgoods:*')}.to_not raise_error
       expect{Irn.new('irn:ifeelgoods-testing:123')}.to_not raise_error
+      expect{Irn.new('irn:ifeelgoods-testing:blabla-139+9EUR-FR')}.to_not raise_error
     end
 
     example 'invalid irn' do
