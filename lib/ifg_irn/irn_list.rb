@@ -1,4 +1,5 @@
 require 'set'
+require 'forwardable'
 
 class IrnList
   include Enumerable
@@ -29,7 +30,7 @@ class IrnList
   end
 
   def match(irn)
-    @irns.map { |item| irn.match(item) }.select(&:matched?)
+    @irns.select { |item| irn.match?(item) }
   end
 
   def restrict(list)

@@ -143,15 +143,13 @@ describe Irn do
 
   describe '#match' do
     example 'two equal irn are matching' do
-      result = Irn.new('irn:ifeelgoods').match(Irn.new('irn:ifeelgoods'))
-      expect(result.matched?).to be(true)
-      expect(result.data).to be(nil)
+      result = Irn.new('irn:ifeelgoods').match?(Irn.new('irn:ifeelgoods'))
+      expect(result).to be(true)
     end
 
     example 'two distinct irn are not matching' do
-      result = Irn.new('irn:ifeelgoods').match(Irn.new('irn:ifeelgoods2'))
-      expect(result.matched?).to be(false)
-      expect(result.data).to be(nil)
+      result = Irn.new('irn:ifeelgoods').match?(Irn.new('irn:ifeelgoods2'))
+      expect(result).to be(false)
     end
 
     example 'a wildcard irn matching an irn' do
@@ -162,9 +160,8 @@ describe Irn do
     end
 
     example 'a wildcard irn matching an irn' do
-      result = Irn.new('irn:ifeelgoods:client:*').match(Irn.new('irn:ifeelgoods:client:1234'))
-      expect(result.matched?).to be(true)
-      expect(result.data).to eq('1234')
+      result = Irn.new('irn:ifeelgoods:client:*').match?(Irn.new('irn:ifeelgoods:client:1234'))
+      expect(result).to be(true)
     end
   end
 

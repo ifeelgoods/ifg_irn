@@ -112,7 +112,6 @@ describe IrnList do
         match_results = list.match(irn)
 
         expect(match_results.size).to eq(3)
-        expect(match_results.map(&:data)).to eq(["1", "21", "42"])
       end
     end
   end
