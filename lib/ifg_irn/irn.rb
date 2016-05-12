@@ -19,14 +19,6 @@ class Irn
     @_regex_registry ||= {}
   end
 
-  def self.get_regex_registry(exp)
-    regex_registry[exp]
-  end
-
-  def self.set_regex_registry(exp, regex)
-    regex_registry[exp] = regex.freeze
-  end
-
   def tokens
     @irn.split(':')
   end
@@ -127,10 +119,10 @@ class Irn
 
     def build_regexp(wildcard_matcher)
       re = @irn.gsub(WILDCARD, wildcard_matcher)
-      regex = self.class.get_regex_registry(re)
+      regex = self.class.regex_registry[re]
       unless regex
         regex = Regexp.new("\\A#{re}\\z")
-        self.class.set_regex_registry(re, regex)
+        self.class.regex_registry[re] = regex.freeze
       end
       regex
     end
