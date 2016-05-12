@@ -1,4 +1,5 @@
 require 'set'
+require 'forwardable'
 
 class IrnList
   include Enumerable
