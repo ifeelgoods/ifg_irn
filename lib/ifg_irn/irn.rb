@@ -80,18 +80,12 @@ class Irn
   # if the represent the same resource or the other resource is a sub resource
   # of the first one
   def match?(other, strict: false)
-    match(other, strict: strict).matched?
-  end
-
-  # Return matching data between a irn and another
-  #
-  # @param other [Irn] the irn to check
-  # @param strict [Boolean] Restrict the match to immediate children only
-  #
-  # @return [MatchResult]
-  def match(other, strict: false)
-    match_data = to_regexp(strict).match(other.to_s)
-    MatchResult.new(match_data)
+    # check if include wildcard
+    if @irn.include?(WILDCARD)
+      !! to_regexp(strict).match(other.to_s)
+    else
+      @irn == other.to_s
+    end
   end
 
   def bind(data)

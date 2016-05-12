@@ -1,6 +1,5 @@
 require_relative "ifg_irn/version"
 require_relative "ifg_irn/exceptions"
-require_relative "ifg_irn/match_result"
 require_relative "ifg_irn/irn"
 require_relative "ifg_irn/irn_list"
 require_relative "ifg_irn/schema"
